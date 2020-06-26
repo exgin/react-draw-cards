@@ -8,6 +8,10 @@ import './Cards.css';
 - CT: I have the cards drawing, can see in console, I need to get the image on the screen for each card being drawn
 - N: I know thats within the drawCard() function & it has to do with mapping over our state, cardDrawn, maybe
 I have to use setCardDrawn?
+--------------------------------
+
+JUNE/26TH/2020
+- show 'no cards remaining' when deck runs out of cards
 
 */
 
@@ -30,7 +34,10 @@ const Cards = () => {
 
   const drawCard = async () => {
     const { deck_id } = cards; // destrcut from our 'global' state in useEffect
-    const draw = await axios.get(`${BASE_URL}/${deck_id}/draw/?count=1`);
+    const singleCard = await axios.get(`${BASE_URL}/${deck_id}/draw/?count=1`);
+
+    // adding to our cardsDrawn array data structure
+    setCardDrawn((cardDrawn) => [...cardDrawn, { ...singleCard.data, id: uuid() }]);
   };
 
   return (
