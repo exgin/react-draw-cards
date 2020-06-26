@@ -12,6 +12,7 @@ I have to use setCardDrawn?
 
 JUNE/26TH/2020
 - show 'no cards remaining' when deck runs out of cards
+----------------------------------------
 
 */
 
@@ -34,10 +35,19 @@ const Cards = () => {
 
   const drawCard = async () => {
     const { deck_id } = cards; // destrcut from our 'global' state in useEffect
-    const singleCard = await axios.get(`${BASE_URL}/${deck_id}/draw/?count=1`);
+    try {
+      const singleCard = await axios.get(`${BASE_URL}/${deck_id}/draw/?count=1`);
 
-    // adding to our cardsDrawn array data structure
-    setCardDrawn((cardDrawn) => [...cardDrawn, { ...singleCard.data, id: uuid() }]);
+      if (singleCard.data.remaining === 0) {
+        alert('No Cards Remaining!');
+        throw new Error('No Cards Remaining!');
+      }
+
+      // adding to our cardsDrawn array data structure
+      setCardDrawn((cardDrawn) => [...cardDrawn, { ...singleCard.data, id: uuid() }]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -54,5 +64,3 @@ const Cards = () => {
 };
 
 export default Cards;
-
-// res.remaining === 0 : 'No cards left!' ? drawCard
